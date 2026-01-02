@@ -1,28 +1,4 @@
-// import { NextResponse } from 'next/server';
-// import Order from '../../models/order';
-// import { connectDB } from '../../../lib/connectDB';
 
-// export async function GET() {
-//   try {
-//     await connectDB();
-    
-//     const orders = await Order.find()
-//       .sort({ createdAt: -1 })
-//       .limit(20)
-//       .lean();
-    
-//     console.log(`Found ${orders.length} orders in database`);
-    
-//     return NextResponse.json(orders);
-    
-//   } catch (error: any) {
-//     console.error('Error fetching orders:', error.message);
-//     return NextResponse.json(
-//       { error: 'Failed to fetch orders' },
-//       { status: 500 }
-//     );
-//   }
-// }
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
 
