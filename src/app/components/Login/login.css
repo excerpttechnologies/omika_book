@@ -229,4 +229,58 @@
   .form-input {
     padding: 10px 12px;
   }
+  /* Add these to your existing login.css */
+.forgot-password-link {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.forgot-password-link .toggle-link {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.forgot-password-link .toggle-link:hover {
+  text-decoration: underline;
+}
+
+.otp-hint {
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+  border: 1px solid #c3e6cb;
+}
+
+.secondary-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.secondary-btn:hover {
+  background-color: #5a6268;
+}
+
+.form-group .secondary-btn + .submit-btn {
+  margin-left: 10px;
+}
 }

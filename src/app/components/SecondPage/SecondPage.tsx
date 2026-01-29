@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
 import Books from '../books/books';
@@ -350,7 +352,7 @@ const SecondPage = () => {
           color: #cbd5e0;
           position: absolute;
           top: -15px;
-          left: 20px;
+          left: 40px;
           font-family: Georgia, serif;
         }
 
