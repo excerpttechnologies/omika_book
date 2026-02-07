@@ -2575,8 +2575,9 @@ export default function Books() {
             }}>
               <FaSearch style={{
                 position: 'absolute',
-                left: isMobile ? '15px' : '20px',
+                left: isMobile ? '25px' : '50px',
                 top: '50%',
+                
                 transform: 'translateY(-50%)',
                 color: '#99bbcf',
                 fontSize: isMobile ? '1rem' : '1.2rem'

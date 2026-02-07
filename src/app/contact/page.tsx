@@ -692,383 +692,6 @@
 
 
 
-// "use client";
-
-// import React, { useState } from "react";
-// import { FiMail, FiPhone, FiMapPin, FiSend, FiUser, FiMessageSquare, FiClock } from "react-icons/fi";
-
-// interface FormData {
-//   name: string;
-//   email: string;
-//   phone: string;
-//   message: string;
-// }
-
-// export default function Contact() {
-//   const [formData, setFormData] = useState<FormData>({
-//     name: "",
-//     email: "",
-//     phone: "",
-//     message: "",
-//   });
-
-//   const [errors, setErrors] = useState<Partial<FormData>>({});
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-//   const [isSubmitted, setIsSubmitted] = useState(false);
-
-//   const validateForm = () => {
-//     const newErrors: Partial<FormData> = {};
-
-//     if (!formData.name.trim()) newErrors.name = "Required";
-//     if (!formData.email.trim()) {
-//       newErrors.email = "Required";
-//     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-//       newErrors.email = "Invalid email";
-//     }
-//     if (!formData.phone.trim()) {
-//       newErrors.phone = "Required";
-//     } else if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-//       newErrors.phone = "10 digits required";
-//     }
-//     if (!formData.message.trim()) newErrors.message = "Required";
-
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-//     const { name, value } = e.target;
-
-//     if (name === 'phone') {
-//       const numbers = value.replace(/\D/g, '');
-//       let formatted = numbers;
-//       if (numbers.length > 3 && numbers.length <= 6) {
-//         formatted = `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-//       } else if (numbers.length > 6) {
-//         formatted = `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
-//       }
-//       setFormData({ ...formData, [name]: formatted });
-//     } else {
-//       setFormData({ ...formData, [name]: value });
-//     }
-
-//     if (errors[name as keyof FormData]) {
-//       setErrors({ ...errors, [name]: undefined });
-//     }
-//   };
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (!validateForm()) return;
-//     setIsSubmitting(true);
-//     await new Promise((resolve) => setTimeout(resolve, 1000));
-//     setIsSubmitted(true);
-//     setFormData({ name: "", email: "", phone: "", message: "" });
-//     setErrors({});
-//     setTimeout(() => {
-//       setIsSubmitting(false);
-//       setIsSubmitted(false);
-//     }, 3000);
-//   };
-
-//   return (
-//     <div style={{ padding: "15px", backgroundColor: "#fff", minHeight: "100vh" }}>
-//       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-        
-//         {/* Header */}
-//         <div style={{ textAlign: "center", marginBottom: "25px" }}>
-//           <h1 style={{ fontSize: "24px", fontWeight: "600", color: "#333", marginBottom: "5px" }}>Contact Us</h1>
-//           <p style={{ fontSize: "14px", color: "#666" }}>Get in touch with our team</p>
-//         </div>
-
-//         {/* Main Content */}
-//         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "25px" }}>
-          
-//           {/* Left Form */}
-//           <div>
-//             <div style={{ backgroundColor: "#f9f9f9", padding: "18px", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
-              
-//               <h2 style={{ fontSize: "16px", fontWeight: "600", color: "#333", marginBottom: "18px", display: "flex", alignItems: "center", gap: "6px" }}>
-//                 <FiSend style={{ color: "#4285f4" }} /> Send Message
-//               </h2>
-
-//               {isSubmitted ? (
-//                 <div style={{ textAlign: "center", padding: "20px", backgroundColor: "#e8f5e9", borderRadius: "6px" }}>
-//                   <div style={{ fontSize: "36px", color: "#4caf50", marginBottom: "10px" }}>✓</div>
-//                   <h3 style={{ color: "#2e7d32", marginBottom: "5px" }}>Message Sent!</h3>
-//                   <p style={{ color: "#666", fontSize: "14px" }}>We'll contact you soon.</p>
-//                 </div>
-//               ) : (
-//                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  
-//                   {/* Name */}
-//                   <div>
-//                     <label style={{ display: "flex", fontSize: "13px", color: "#555", marginBottom: "4px", alignItems: "center", gap: "4px" }}>
-//                       <FiUser style={{ fontSize: "12px" }} /> Name *
-//                     </label>
-//                     <input
-//                       type="text"
-//                       name="name"
-//                       value={formData.name}
-//                       onChange={handleChange}
-//                       style={{ width: "100%", padding: "8px 10px", fontSize: "14px", border: `1px solid ${errors.name ? "#ff4444" : "#ccc"}`, borderRadius: "4px" }}
-//                       placeholder="Your name"
-//                     />
-//                     {errors.name && <p style={{ color: "#ff4444", fontSize: "11px", marginTop: "2px" }}>{errors.name}</p>}
-//                   </div>
-
-//                   {/* Email */}
-//                   <div>
-//                     <label style={{ display: "flex", fontSize: "13px", color: "#555", marginBottom: "4px", alignItems: "center", gap: "4px" }}>
-//                       <FiMail style={{ fontSize: "12px" }} /> Email *
-//                     </label>
-//                     <input
-//                       type="email"
-//                       name="email"
-//                       value={formData.email}
-//                       onChange={handleChange}
-//                       style={{ width: "100%", padding: "8px 10px", fontSize: "14px", border: `1px solid ${errors.email ? "#ff4444" : "#ccc"}`, borderRadius: "4px" }}
-//                       placeholder="your@email.com"
-//                     />
-//                     {errors.email && <p style={{ color: "#ff4444", fontSize: "11px", marginTop: "2px" }}>{errors.email}</p>}
-//                   </div>
-
-//                   {/* Phone */}
-//                   <div>
-//                     <label style={{ display: "flex", fontSize: "13px", color: "#555", marginBottom: "4px", alignItems: "center", gap: "4px" }}>
-//                       <FiPhone style={{ fontSize: "12px" }} /> Phone *
-//                     </label>
-//                     <input
-//                       type="tel"
-//                       name="phone"
-//                       value={formData.phone}
-//                       onChange={handleChange}
-//                       style={{ width: "100%", padding: "8px 10px", fontSize: "14px", border: `1px solid ${errors.phone ? "#ff4444" : "#ccc"}`, borderRadius: "4px" }}
-//                       placeholder="123-456-7890"
-//                     />
-//                     {errors.phone && <p style={{ color: "#ff4444", fontSize: "11px", marginTop: "2px" }}>{errors.phone}</p>}
-//                   </div>
-
-//                   {/* Message */}
-//                   <div>
-//                     <label style={{ display: "flex", fontSize: "13px", color: "#555", marginBottom: "4px", alignItems: "center", gap: "4px" }}>
-//                       <FiMessageSquare style={{ fontSize: "12px" }} /> Message *
-//                     </label>
-//                     <textarea
-//                       name="message"
-//                       rows={3}
-//                       value={formData.message}
-//                       onChange={handleChange}
-//                       style={{ width: "100%", padding: "8px 10px", fontSize: "14px", border: `1px solid ${errors.message ? "#ff4444" : "#ccc"}`, borderRadius: "4px", resize: "vertical" }}
-//                       placeholder="Your message..."
-//                     />
-//                     {errors.message && <p style={{ color: "#ff4444", fontSize: "11px", marginTop: "2px" }}>{errors.message}</p>}
-//                   </div>
-
-//                   {/* Submit */}
-//                   <button
-//                     type="submit"
-//                     disabled={isSubmitting}
-//                     style={{
-//                       marginTop: "5px",
-//                       padding: "10px",
-//                       fontSize: "14px",
-//                       color: "white",
-//                       backgroundColor: isSubmitting ? "#999" : "#333",
-//                       border: "none",
-//                       borderRadius: "4px",
-//                       cursor: isSubmitting ? "not-allowed" : "pointer"
-//                     }}
-//                   >
-//                     {isSubmitting ? "Sending..." : "Send Message"}
-//                   </button>
-//                 </form>
-//               )}
-//             </div>
-//           </div>
-
-//           {/* Right Side - Combined Map & Contact Info */}
-//           <div>
-//             <div style={{ 
-//               backgroundColor: "#f9f9f9", 
-//               padding: "18px", 
-//               borderRadius: "8px", 
-//               border: "1px solid #e0e0e0",
-//               height: "100%"
-//             }}>
-              
-//               {/* Title */}
-//               <h2 style={{ 
-//                 fontSize: "16px", 
-//                 fontWeight: "600", 
-//                 color: "#333", 
-//                 marginBottom: "18px", 
-//                 display: "flex", 
-//                 alignItems: "center", 
-//                 gap: "6px" 
-//               }}>
-//                 <FiMapPin style={{ color: "#4285f4" }} /> Our Location & Contact
-//               </h2>
-
-//               {/* Map Section */}
-//               <div style={{ marginBottom: "20px" }}>
-//                 <div style={{ 
-//                   height: "180px", 
-//                   borderRadius: "6px", 
-//                   overflow: "hidden", 
-//                   border: "1px solid #ddd",
-//                   marginBottom: "15px"
-//                 }}>
-//                   <iframe
-//                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0353875248135!2d-122.419416684682!3d37.774929779759!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808c0b9f2c3f%3A0x5e7c2a5a5a5a5a5a!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
-//                     width="100%"
-//                     height="100%"
-//                     style={{ border: 0 }}
-//                     allowFullScreen
-//                     loading="lazy"
-//                     title="Location"
-//                   />
-//                 </div>
-//               </div>
-
-//               {/* Contact Information - Vertical List */}
-//               <div style={{ 
-//                 display: "flex", 
-//                 flexDirection: "column", 
-//                 gap: "14px"
-//               }}>
-                
-//                 {/* Address */}
-//                 <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-//                   <div style={{ 
-//                     width: "32px", 
-//                     height: "32px", 
-//                     borderRadius: "6px", 
-//                     backgroundColor: "#e8f0fe", 
-//                     display: "flex", 
-//                     alignItems: "center", 
-//                     justifyContent: "center",
-//                     flexShrink: 0
-//                   }}>
-//                     <FiMapPin style={{ color: "#4285f4", fontSize: "16px" }} />
-//                   </div>
-//                   <div style={{ flex: 1 }}>
-//                     <p style={{ fontSize: "13px", fontWeight: "500", color: "#333", marginBottom: "2px" }}>Address</p>
-//                     <p style={{ fontSize: "13px", color: "#666", lineHeight: "1.4" }}>
-//                       123 Book Street,<br />
-//                       San Francisco, CA 94107
-//                     </p>
-//                   </div>
-//                 </div>
-
-//                 {/* Phone */}
-//                 <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-//                   <div style={{ 
-//                     width: "32px", 
-//                     height: "32px", 
-//                     borderRadius: "6px", 
-//                     backgroundColor: "#e8f0fe", 
-//                     display: "flex", 
-//                     alignItems: "center", 
-//                     justifyContent: "center",
-//                     flexShrink: 0
-//                   }}>
-//                     <FiPhone style={{ color: "#4285f4", fontSize: "16px" }} />
-//                   </div>
-//                   <div style={{ flex: 1 }}>
-//                     <p style={{ fontSize: "13px", fontWeight: "500", color: "#333", marginBottom: "2px" }}>Phone</p>
-//                     <p style={{ fontSize: "13px", color: "#666" }}>+1 (555) 123-4567</p>
-//                   </div>
-//                 </div>
-
-//                 {/* Email */}
-//                 <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-//                   <div style={{ 
-//                     width: "32px", 
-//                     height: "32px", 
-//                     borderRadius: "6px", 
-//                     backgroundColor: "#e8f0fe", 
-//                     display: "flex", 
-//                     alignItems: "center", 
-//                     justifyContent: "center",
-//                     flexShrink: 0
-//                   }}>
-//                     <FiMail style={{ color: "#4285f4", fontSize: "16px" }} />
-//                   </div>
-//                   <div style={{ flex: 1 }}>
-//                     <p style={{ fontSize: "13px", fontWeight: "500", color: "#333", marginBottom: "2px" }}>Email</p>
-//                     <p style={{ fontSize: "13px", color: "#666" }}>support@bookhub.com</p>
-//                   </div>
-//                 </div>
-
-//                 {/* Business Hours */}
-//                 <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-//                   <div style={{ 
-//                     width: "32px", 
-//                     height: "32px", 
-//                     borderRadius: "6px", 
-//                     backgroundColor: "#e8f0fe", 
-//                     display: "flex", 
-//                     alignItems: "center", 
-//                     justifyContent: "center",
-//                     flexShrink: 0
-//                   }}>
-//                     <FiClock style={{ color: "#4285f4", fontSize: "16px" }} />
-//                   </div>
-//                   <div style={{ flex: 1 }}>
-//                     <p style={{ fontSize: "13px", fontWeight: "500", color: "#333", marginBottom: "2px" }}>Business Hours</p>
-//                     <div>
-//                       <p style={{ fontSize: "13px", color: "#666", marginBottom: "2px" }}>Mon - Fri: 9:00 AM - 6:00 PM</p>
-//                       <p style={{ fontSize: "13px", color: "#666" }}>Sat: 10:00 AM - 4:00 PM</p>
-//                     </div>
-//                   </div>
-//                 </div>
-
-//               </div>
-
-//               {/* Quick Response Note */}
-//               <div style={{ 
-//                 marginTop: "20px", 
-//                 padding: "12px", 
-//                 backgroundColor: "#f0f7ff", 
-//                 borderRadius: "6px",
-//                 borderLeft: "3px solid #4285f4"
-//               }}>
-//                 <p style={{ fontSize: "13px", color: "#333", margin: 0 }}>
-//                   <span style={{ fontWeight: "500" }}>Quick Response:</span> We typically respond within 24 hours.
-//                 </p>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Footer */}
-//         <div style={{ 
-//           textAlign: "center", 
-//           marginTop: "25px", 
-//           paddingTop: "15px", 
-//           fontSize: "12px", 
-//           color: "#888", 
-//           borderTop: "1px solid #eee" 
-//         }}>
-//           <p>© 2024 BookHub. All rights reserved.</p>
-//         </div>
-
-//         {/* Responsive */}
-//         <style jsx>{`
-//           @media (max-width: 768px) {
-//             div[style*="gridTemplateColumns: 1fr 1fr"] {
-//               grid-template-columns: 1fr;
-//             }
-//           }
-//         `}</style>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
 
 
 
@@ -1088,7 +711,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FiMail, FiPhone, FiMapPin, FiSend, FiUser, FiMessageSquare, FiClock } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin, FiSend, FiUser, FiMessageSquare, FiClock, FiCheck } from "react-icons/fi";
 
 interface FormData {
   name: string;
@@ -1165,653 +788,816 @@ export default function Contact() {
   };
 
   return (
-    <div style={{
-      padding: "20px",
-      backgroundColor: "#ffffff",
-      minHeight: "100vh",
-      fontFamily: "'Inter', sans-serif"
-    }}>
-      <div style={{
-        maxWidth: "1400px",
-        margin: "0 auto"
-      }}>
-        
-        {/* Header */}
-        <div style={{
-          textAlign: "center",
-          marginBottom: "40px"
-        }}>
-          <h1 style={{
-            fontSize: "28px",
-            fontWeight: "700",
-            color: "#af461d",
-            marginBottom: "8px"
-          }}>
-            Contact Us
-          </h1>
-          <p style={{
-            fontSize: "15px",
-            color: "#e1691e"
-          }}>
-            Get in touch with our team
-          </p>
-        </div>
-
-        {/* Horizontal Layout - All Sections Side by Side */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "20px",
-          alignItems: "start"
-        }}>
+    <div className="contact-page">
+      <div className="contact-container">
+        <div className="contact-wrapper">
           
-          {/* Send Message Section */}
-          <div style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            padding: "25px",
-            border: "1px solid #e2e8f0",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-            height: "100%"
-          }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "20px"
-            }}>
-              <div style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "8px",
-                backgroundColor: "#e0e7ff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <FiSend style={{ color: "#4f46e5", fontSize: "18px" }} />
+          {/* Header */}
+          <div className="contact-header">
+            <h1 className="contact-title">Contact Us</h1>
+            <p className="contact-subtitle">Get in touch with our team</p>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="contact-grid">
+            
+            {/* Send Message Section */}
+            <div className="contact-section message-section">
+              <div className="section-header">
+                <div className="section-icon">
+                  <FiSend />
+                </div>
+                <h2 className="section-title">Send Message</h2>
               </div>
-              <h2 style={{
-                fontSize: "18px",
-                fontWeight: "600",
-                color: "#1a202c",
-                margin: 0
-              }}>
-                Send Message
-              </h2>
+
+              {isSubmitted ? (
+                <div className="success-message">
+                  <div className="success-icon">
+                    <FiCheck />
+                  </div>
+                  <h3 className="success-title">Message Sent!</h3>
+                  <p className="success-text">We&apos;ll respond within 24 hours</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="contact-form">
+                  <div className="form-grid">
+                    
+                    {/* Name Field */}
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="name">
+                        Full Name *
+                      </label>
+                      <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className={`form-input ${errors.name ? "input-error" : ""}`}
+                        placeholder="Your name"
+                      />
+                      {errors.name && (
+                        <p className="error-text">
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Email Field */}
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="email">
+                        Email *
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={`form-input ${errors.email ? "input-error" : ""}`}
+                        placeholder="your@email.com"
+                      />
+                      {errors.email && (
+                        <p className="error-text">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Phone Field */}
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="phone">
+                        Phone *
+                      </label>
+                      <input
+                        id="phone"
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className={`form-input ${errors.phone ? "input-error" : ""}`}
+                        placeholder="123-456-7890"
+                      />
+                      {errors.phone && (
+                        <p className="error-text">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Message Field */}
+                    <div className="form-group full-width">
+                      <label className="form-label" htmlFor="message">
+                        Message *
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        rows={4}
+                        value={formData.message}
+                        onChange={handleChange}
+                        className={`form-textarea ${errors.message ? "input-error" : ""}`}
+                        placeholder="Your message..."
+                      />
+                      {errors.message && (
+                        <p className="error-text">
+                          {errors.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="form-group full-width">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className={`submit-btn ${isSubmitting ? "submitting" : ""}`}
+                      >
+                        {isSubmitting ? (
+                          <span className="btn-content">
+                            <span className="spinner"></span>
+                            Sending...
+                          </span>
+                        ) : "Send Message"}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              )}
             </div>
 
-            {isSubmitted ? (
-              <div style={{
-                textAlign: "center",
-                padding: "20px",
-                backgroundColor: "#f0fdf4",
-                borderRadius: "6px",
-                border: "1px solid #bbf7d0"
-              }}>
-                <div style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  backgroundColor: "#22c55e",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 10px",
-                  color: "white",
-                  fontSize: "20px"
-                }}>
-                  ✓
+            {/* Our Location Section */}
+            <div className="contact-section location-section">
+              <div className="section-header">
+                <div className="section-icon">
+                  <FiMapPin />
                 </div>
-                <h3 style={{
-                  color: "#166534",
-                  marginBottom: "5px",
-                  fontSize: "16px",
-                  fontWeight: "600"
-                }}>
-                  Message Sent!
-                </h3>
-                <p style={{
-                  color: "#4b5563",
-                  fontSize: "14px"
-                }}>
-                  We'll respond soon.
+                <h2 className="section-title">Our Location</h2>
+              </div>
+
+              <div className="map-container">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0353875248135!2d-122.419416684682!3d37.774929779759!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808c0b9f2c3f%3A0x5e7c2a5a5a5a5a5a!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  title="Our Location"
+                />
+              </div>
+              
+              <div className="address-box">
+                <p className="address-title">
+                  📍 Address
+                </p>
+                <p className="address-text">
+                  123 Book Street<br />
+                  San Francisco, CA 94107<br />
+                  United States
                 </p>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "12px"
-                }}>
-                  
-                  {/* Name Field */}
-                  <div>
-                    <label style={{
-                      display: "block",
-                      fontSize: "13px",
-                      fontWeight: "500",
-                      color: "#4a5568",
-                      marginBottom: "4px"
-                    }}>
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        fontSize: "14px",
-                        border: `1px solid ${errors.name ? "#f87171" : "#e2e8f0"}`,
-                        borderRadius: "6px",
-                        outline: "none",
-                        backgroundColor: "#fff"
-                      }}
-                      placeholder="Your name"
-                    />
-                    {errors.name && (
-                      <p style={{
-                        color: "#dc2626",
-                        fontSize: "12px",
-                        marginTop: "3px"
-                      }}>
-                        {errors.name}
-                      </p>
-                    )}
-                  </div>
 
-                  {/* Email Field */}
-                  <div>
-                    <label style={{
-                      display: "block",
-                      fontSize: "13px",
-                      fontWeight: "500",
-                      color: "#4a5568",
-                      marginBottom: "4px"
-                    }}>
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        fontSize: "14px",
-                        border: `1px solid ${errors.email ? "#f87171" : "#e2e8f0"}`,
-                        borderRadius: "6px",
-                        outline: "none",
-                        backgroundColor: "#fff"
-                      }}
-                      placeholder="your@email.com"
-                    />
-                    {errors.email && (
-                      <p style={{
-                        color: "#dc2626",
-                        fontSize: "12px",
-                        marginTop: "3px"
-                      }}>
-                        {errors.email}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Phone Field */}
-                  <div>
-                    <label style={{
-                      display: "block",
-                      fontSize: "13px",
-                      fontWeight: "500",
-                      color: "#4a5568",
-                      marginBottom: "4px"
-                    }}>
-                      Phone *
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        fontSize: "14px",
-                        border: `1px solid ${errors.phone ? "#f87171" : "#e2e8f0"}`,
-                        borderRadius: "6px",
-                        outline: "none",
-                        backgroundColor: "#fff"
-                      }}
-                      placeholder="123-456-7890"
-                    />
-                    {errors.phone && (
-                      <p style={{
-                        color: "#dc2626",
-                        fontSize: "12px",
-                        marginTop: "3px"
-                      }}>
-                        {errors.phone}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Message Field */}
-                  <div>
-                    <label style={{
-                      display: "block",
-                      fontSize: "13px",
-                      fontWeight: "500",
-                      color: "#4a5568",
-                      marginBottom: "4px"
-                    }}>
-                      Message *
-                    </label>
-                    <textarea
-                      name="message"
-                      rows={3}
-                      value={formData.message}
-                      onChange={handleChange}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        fontSize: "14px",
-                        border: `1px solid ${errors.message ? "#f87171" : "#e2e8f0"}`,
-                        borderRadius: "6px",
-                        outline: "none",
-                        backgroundColor: "#fff",
-                        resize: "vertical"
-                      }}
-                      placeholder="Your message..."
-                    />
-                    {errors.message && (
-                      <p style={{
-                        color: "#dc2626",
-                        fontSize: "12px",
-                        marginTop: "3px"
-                      }}>
-                        {errors.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "white",
-                      backgroundColor: isSubmitting ? "#9ca3af" : "#4f46e5",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: isSubmitting ? "not-allowed" : "pointer",
-                      marginTop: "5px"
-                    }}
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-
-          {/* Our Location Section */}
-          <div style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            padding: "25px",
-            border: "1px solid #e2e8f0",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-            height: "100%"
-          }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "20px"
-            }}>
-              <div style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "8px",
-                backgroundColor: "#e0e7ff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <FiMapPin style={{ color: "#4f46e5", fontSize: "18px" }} />
+              <div className="info-box parking-info">
+                <FiMapPin className="info-icon" />
+                <p>Free parking available</p>
               </div>
-              <h2 style={{
-                fontSize: "18px",
-                fontWeight: "600",
-                color: "#1a202c",
-                margin: 0
-              }}>
-                Our Location
-              </h2>
-            </div>
-
-            <div style={{
-              height: "180px",
-              borderRadius: "6px",
-              overflow: "hidden",
-              border: "1px solid #e5e7eb",
-              marginBottom: "15px"
-            }}>
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0353875248135!2d-122.419416684682!3d37.774929779759!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808c0b9f2c3f%3A0x5e7c2a5a5a5a5a5a!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                title="Our Location"
-              />
-            </div>
-            
-            <div style={{
-              padding: "12px",
-              backgroundColor: "#f8fafc",
-              borderRadius: "6px"
-            }}>
-              <p style={{
-                fontSize: "14px",
-                color: "#4b5563",
-                margin: "0 0 5px 0",
-                fontWeight: "500"
-              }}>
-                📍 Address:
-              </p>
-              <p style={{
-                fontSize: "14px",
-                color: "#4b5563",
-                margin: 0,
-                lineHeight: "1.4"
-              }}>
-                123 Book Street<br />
-                San Francisco, CA 94107<br />
-                United States
-              </p>
-            </div>
-
-            <div style={{
-              marginTop: "15px",
-              padding: "10px",
-              backgroundColor: "#f0f9ff",
-              borderRadius: "6px",
-              borderLeft: "3px solid #3b82f6"
-            }}>
-              <p style={{
-                fontSize: "13px",
-                color: "#1e40af",
-                margin: 0,
-                fontWeight: "500"
-              }}>
-                {/* 🚗 Parking Available */}
-              </p>
             </div>
           </div>
 
-          {/* Contact Details Section */}
-          <div style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            padding: "25px",
-            border: "1px solid #e2e8f0",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-            height: "100%"
-          }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "20px"
-            }}>
-              <div style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "8px",
-                backgroundColor: "#e0e7ff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <FiPhone style={{ color: "#4f46e5", fontSize: "18px" }} />
-              </div>
-              <h2 style={{
-                fontSize: "18px",
-                fontWeight: "600",
-                color: "#1a202c",
-                margin: 0
-              }}>
-                Contact Details
-              </h2>
-            </div>
-
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "15px",
-              marginBottom: "20px"
-            }}>
-              
-              {/* Phone */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px"
-              }}>
-                <div style={{
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "6px",
-                  backgroundColor: "#f0f9ff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0
-                }}>
-                  <FiPhone style={{ color: "#3b82f6", fontSize: "16px" }} />
-                </div>
-                <div>
-                  <p style={{
-                    fontSize: "13px",
-                    color: "#6b7280",
-                    margin: "0 0 2px 0"
-                  }}>
-                    Phone Number
-                  </p>
-                  <p style={{
-                    fontSize: "15px",
-                    fontWeight: "500",
-                    color: "#1f2937",
-                    margin: 0
-                  }}>
-                    +1 (555) 123-4567
-                  </p>
-                </div>
-              </div>
-
-              {/* Email */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px"
-              }}>
-                <div style={{
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "6px",
-                  backgroundColor: "#f0f9ff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0
-                }}>
-                  <FiMail style={{ color: "#3b82f6", fontSize: "16px" }} />
-                </div>
-                <div>
-                  <p style={{
-                    fontSize: "13px",
-                    color: "#6b7280",
-                    margin: "0 0 2px 0"
-                  }}>
-                    Email Address
-                  </p>
-                  <p style={{
-                    fontSize: "15px",
-                    fontWeight: "500",
-                    color: "#1f2937",
-                    margin: 0
-                  }}>
-                    support@bookhub.com
-                  </p>
-                </div>
-              </div>
-
-              {/* Hours */}
-              <div style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "12px"
-              }}>
-                <div style={{
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "6px",
-                  backgroundColor: "#f0f9ff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0
-                }}>
-                  <FiClock style={{ color: "#3b82f6", fontSize: "16px" }} />
-                </div>
-                <div>
-                  <p style={{
-                    fontSize: "13px",
-                    color: "#6b7280",
-                    margin: "0 0 2px 0"
-                  }}>
-                    Business Hours
-                  </p>
-                  <div>
-                    <p style={{
-                      fontSize: "14px",
-                      color: "#1f2937",
-                      margin: "2px 0"
-                    }}>
-                      Mon-Fri: 9:00 AM - 6:00 PM
-                    </p>
-                    <p style={{
-                      fontSize: "14px",
-                      color: "#1f2937",
-                      margin: "2px 0 0 0"
-                    }}>
-                      Sat: 10:00 AM - 4:00 PM
-                    </p>
-                    <p style={{
-                      fontSize: "14px",
-                      color: "#1f2937",
-                      margin: "2px 0 0 0"
-                    }}>
-                      Sun: Closed
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Emergency Contact */}
-            <div style={{
-              padding: "12px",
-              backgroundColor: "#fef2f2",
-              borderRadius: "6px",
-              borderLeft: "3px solid #dc2626",
-              marginTop: "10px"
-            }}>
-              <p style={{
-                fontSize: "13px",
-                color: "#7f1d1d",
-                margin: 0,
-                fontWeight: "500"
-              }}>
-                🚨 Emergency Contact:
-              </p>
-              <p style={{
-                fontSize: "14px",
-                color: "#7f1d1d",
-                margin: "3px 0 0 0"
-              }}>
-                +1 (555) 987-6543
-              </p>
-            </div>
-
-            {/* Response Time */}
-            <div style={{
-              marginTop: "15px",
-              padding: "10px",
-              backgroundColor: "#f8fafc",
-              borderRadius: "6px"
-            }}>
-              <p style={{
-                fontSize: "13px",
-                color: "#4b5563",
-                margin: 0,
-                textAlign: "center"
-              }}>
-                <span style={{ fontWeight: "500" }}>Response Time:</span> 24 hours
-              </p>
-            </div>
+          {/* Footer */}
+          <div className="contact-footer">
+            <p className="copyright">
+              © 2026 BookHub. All rights reserved.
+            </p>
+            <p className="footer-note">
+              Need immediate assistance? Call our 24/7 support line.
+            </p>
           </div>
         </div>
-
-        {/* Footer */}
-        <div style={{
-          textAlign: "center",
-          marginTop: "40px",
-          paddingTop: "20px",
-          borderTop: "1px solid #e5e7eb"
-        }}>
-          <p style={{
-            fontSize: "14px",
-            color: "#6b7280",
-            margin: "0 0 5px 0"
-          }}>
-            © 2024 BookHub. All rights reserved.
-          </p>
-          <p style={{
-            fontSize: "13px",
-            color: "#9ca3af",
-            margin: 0
-          }}>
-            Need immediate assistance? Call our support line.
-          </p>
-        </div>
-
-        {/* Responsive */}
-        <style jsx>{`
-          @media (max-width: 1100px) {
-            div[style*="gridTemplateColumns: 1fr 1fr 1fr"] {
-              grid-template-columns: 1fr 1fr;
-            }
-          }
-          
-          @media (max-width: 768px) {
-            div[style*="gridTemplateColumns: 1fr 1fr 1fr"] {
-              grid-template-columns: 1fr;
-            }
-          }
-        `}</style>
       </div>
+
+      <style jsx>{`
+        /* === RESET AND BASE STYLES === */
+        .contact-page {
+          min-height: 100vh;
+          background-color: #ffffff;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        /* === MOBILE-FIRST STYLES === */
+        
+        .contact-container {
+          width: 100%;
+          padding: 16px;
+          overflow-x: hidden;
+        }
+
+        .contact-wrapper {
+          max-width: 100%;
+          margin: 0 auto;
+          overflow-x: hidden;
+        }
+
+        /* Header */
+        .contact-header {
+          text-align: center;
+          margin-bottom: 24px;
+          padding: 0 8px;
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .contact-title {
+          font-size: 28px;
+          font-weight: 800;
+          color: #1a202c;
+          margin-bottom: 8px;
+          line-height: 1.2;
+          word-wrap: break-word;
+        }
+
+        .contact-subtitle {
+          font-size: 16px;
+          color: #718096;
+          line-height: 1.5;
+          font-weight: 500;
+          word-wrap: break-word;
+        }
+
+        /* Grid Layout - Mobile: Stacked */
+        .contact-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        /* Sections */
+        .contact-section {
+          background: white;
+          border-radius: 16px;
+          padding: 24px 20px;
+          border: 1px solid #e2e8f0;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          width: 100%;
+          max-width: 100%;
+          overflow: hidden;
+        }
+
+        .section-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 24px;
+          width: 100%;
+        }
+
+        .section-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .section-icon svg {
+          color: white;
+          font-size: 20px;
+          stroke-width: 2.5;
+        }
+
+        .section-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #2d3748;
+          margin: 0;
+          line-height: 1.3;
+          word-wrap: break-word;
+        }
+
+        /* Success Message */
+        .success-message {
+          text-align: center;
+          padding: 40px 20px;
+          background: linear-gradient(135deg, #10b9810d 0%, #34d3990d 100%);
+          border-radius: 12px;
+          border: 1px solid #bbf7d0;
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .success-icon {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 20px;
+          color: white;
+          font-size: 24px;
+        }
+
+        .success-title {
+          color: #065f46;
+          margin-bottom: 8px;
+          font-size: 20px;
+          font-weight: 700;
+          word-wrap: break-word;
+        }
+
+        .success-text {
+          color: #047857;
+          font-size: 15px;
+          font-weight: 500;
+          word-wrap: break-word;
+        }
+
+        /* Form Styles */
+        .contact-form {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .form-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          width: 100%;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          width: 100%;
+        }
+
+        .form-group.full-width {
+          grid-column: 1 / -1;
+        }
+
+        .form-label {
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          color: #4a5568;
+          margin-bottom: 4px;
+          word-wrap: break-word;
+          width: 100%;
+        }
+
+        .form-input,
+        .form-textarea {
+          width: 100%;
+          padding: 16px;
+          font-size: 16px;
+          border: 2px solid #e2e8f0;
+          border-radius: 12px;
+          outline: none;
+          background-color: #f8fafc;
+          font-family: inherit;
+          transition: all 0.2s ease;
+          -webkit-appearance: none;
+          appearance: none;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+          border-color: #4f46e5;
+          background-color: white;
+          box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-input.input-error,
+        .form-textarea.input-error {
+          border-color: #ef4444;
+          background-color: #fef2f2;
+        }
+
+        .error-text {
+          color: #dc2626;
+          font-size: 13px;
+          margin-top: 4px;
+          font-weight: 500;
+          padding-left: 4px;
+          word-wrap: break-word;
+        }
+
+        .form-textarea {
+          resize: vertical;
+          min-height: 120px;
+          line-height: 1.5;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+          width: 100%;
+          padding: 18px;
+          font-size: 16px;
+          font-weight: 600;
+          color: white;
+          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+          border: none;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          height: 56px;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        .submit-btn:not(.submitting):active {
+          transform: scale(0.98);
+        }
+
+        .submit-btn.submitting {
+          background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+          cursor: not-allowed;
+        }
+
+        .btn-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .spinner {
+          width: 18px;
+          height: 18px;
+          border: 2.5px solid rgba(255, 255, 255, 0.3);
+          border-top-color: white;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* Map Section */
+        .map-container {
+          height: 200px;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 2px solid #e2e8f0;
+          margin-bottom: 20px;
+          position: relative;
+          width: 100%;
+        }
+
+        .map-container iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .address-box {
+          padding: 20px;
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          border-radius: 12px;
+          margin-bottom: 16px;
+          border: 1px solid #e2e8f0;
+          width: 100%;
+        }
+
+        .address-title {
+          font-size: 14px;
+          color: #4f46e5;
+          margin: 0 0 8px 0;
+          font-weight: 700;
+          word-wrap: break-word;
+        }
+
+        .address-text {
+          font-size: 15px;
+          color: #4a5568;
+          margin: 0;
+          line-height: 1.6;
+          font-weight: 500;
+          word-wrap: break-word;
+        }
+
+        /* Info Boxes */
+        .info-box {
+          padding: 16px;
+          border-radius: 12px;
+          margin-top: 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .parking-info {
+          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          border-left: 4px solid #3b82f6;
+        }
+
+        .info-icon {
+          color: #3b82f6;
+          font-size: 18px;
+          stroke-width: 2.5;
+          flex-shrink: 0;
+        }
+
+        .parking-info p {
+          font-size: 15px;
+          color: #1e40af;
+          margin: 0;
+          font-weight: 600;
+          line-height: 1.4;
+          word-wrap: break-word;
+          flex: 1;
+        }
+
+        /* Footer */
+        .contact-footer {
+          text-align: center;
+          margin-top: 48px;
+          padding-top: 28px;
+          border-top: 1px solid #e5e7eb;
+          padding: 0 8px;
+          width: 100%;
+        }
+
+        .copyright {
+          font-size: 14px;
+          color: #6b7280;
+          margin: 0 0 8px 0;
+          font-weight: 500;
+          word-wrap: break-word;
+        }
+
+        .footer-note {
+          font-size: 13px;
+          color: #9ca3af;
+          margin: 0;
+          font-weight: 500;
+          line-height: 1.4;
+          word-wrap: break-word;
+        }
+
+        /* === RESPONSIVE BREAKPOINTS === */
+        
+        /* Tablet (min-width: 640px) */
+        @media (min-width: 640px) {
+          .contact-container {
+            padding: 24px;
+          }
+
+          .contact-title {
+            font-size: 32px;
+          }
+
+          .contact-subtitle {
+            font-size: 18px;
+          }
+
+          .contact-section {
+            padding: 28px 24px;
+          }
+
+          .section-title {
+            font-size: 22px;
+          }
+
+          .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+          }
+
+          .form-group.full-width {
+            grid-column: 1 / -1;
+          }
+
+          .map-container {
+            height: 220px;
+          }
+        }
+
+        /* Large Tablet (min-width: 768px) */
+        @media (min-width: 768px) {
+          .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+          }
+
+          .message-section {
+            grid-column: 1;
+          }
+
+          .location-section {
+            grid-column: 2;
+          }
+
+          .contact-section {
+            padding: 32px 28px;
+          }
+
+          .section-title {
+            font-size: 24px;
+          }
+
+          .contact-title {
+            font-size: 36px;
+          }
+        }
+
+        /* Desktop (min-width: 1024px) */
+        @media (min-width: 1024px) {
+          .contact-container {
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+          }
+
+          .contact-wrapper {
+            width: 100%;
+            max-width: 1200px;
+          }
+
+          .contact-header {
+            margin-bottom: 48px;
+          }
+
+          .contact-title {
+            font-size: 40px;
+          }
+
+          .contact-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+          }
+
+          .message-section {
+            grid-column: 1;
+          }
+
+          .location-section {
+            grid-column: 2;
+          }
+
+          .contact-section {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 36px 32px;
+          }
+
+          .form-grid {
+            flex: 1;
+          }
+
+          .submit-btn {
+            margin-top: auto;
+          }
+
+          .map-container {
+            height: 180px;
+            flex-shrink: 0;
+          }
+
+          .address-box,
+          .info-box {
+            flex-shrink: 0;
+          }
+        }
+
+        /* Large Desktop (min-width: 1280px) */
+        @media (min-width: 1280px) {
+          .contact-container {
+            padding: 40px;
+          }
+
+          .contact-grid {
+            gap: 40px;
+          }
+
+          .contact-section {
+            padding: 40px 36px;
+          }
+
+          .map-container {
+            height: 200px;
+          }
+        }
+
+        /* === TOUCH DEVICE OPTIMIZATIONS === */
+        @media (hover: none) and (pointer: coarse) {
+          .form-input,
+          .form-textarea,
+          .submit-btn {
+            font-size: 16px !important;
+            min-height: 56px;
+          }
+
+          .submit-btn {
+            min-height: 56px;
+          }
+
+          .contact-section {
+            border: 2px solid #e2e8f0;
+          }
+        }
+
+        /* === FIX FOR IOS ZOOM ON INPUT FOCUS === */
+        @media screen and (max-width: 768px) {
+          input.form-input,
+          textarea.form-textarea,
+          select.form-input {
+            font-size: 16px !important;
+          }
+        }
+
+        /* === DARK MODE SUPPORT === */
+        @media (prefers-color-scheme: dark) {
+          .contact-page {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+          }
+
+          .contact-section {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+          }
+
+          .contact-title,
+          .section-title {
+            color: #f8fafc;
+          }
+
+          .contact-subtitle {
+            color: #cbd5e1;
+          }
+
+          .form-label {
+            color: #cbd5e1;
+          }
+
+          .form-input,
+          .form-textarea {
+            background-color: #334155;
+            border-color: #475569;
+            color: #f8fafc;
+          }
+
+          .form-input:focus,
+          .form-textarea:focus {
+            background-color: #1e293b;
+            border-color: #6366f1;
+          }
+
+          .address-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-color: #475569;
+          }
+
+          .address-text {
+            color: #cbd5e1;
+          }
+
+          .parking-info {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            border-color: #3b82f6;
+          }
+
+          .parking-info p {
+            color: #dbeafe;
+          }
+        }
+      `}</style>
     </div>
   );
 }

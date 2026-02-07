@@ -341,7 +341,7 @@ const SecondPage = () => {
 
         .testimonial-card {
           background: white;
-          padding: 30px;
+          padding: 0px;
           border-radius: 12px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
           position: relative;
@@ -352,7 +352,7 @@ const SecondPage = () => {
           color: #cbd5e0;
           position: absolute;
           top: -15px;
-          left: 40px;
+          left: 50px;
           font-family: Georgia, serif;
         }
 

@@ -3045,7 +3045,7 @@ export default function Header() {
     { label: "Books", path: "/books", icon: <BookOpen size={20} /> },
     { label: "Blog", path: "/blogs", icon: <FileText size={20} /> }, 
     { label: "About", path: "/about", icon: <Info size={20} /> },
-    { label: "Contact", path: "/contact", icon: <Phone size={20} /> },
+    // { label: "Contact", path: "/contact", icon: <Phone size={20} /> },
   ];
 
   const handleLoginSuccess = () => {
@@ -3097,7 +3097,7 @@ export default function Header() {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      height: "80px",
+      height: "60px",
       transition: "height 0.3s ease",
     },
     mobileMenuBtn: {
@@ -3117,11 +3117,11 @@ export default function Header() {
     },
     logoImage: {
       width: "50px",
-      height: "50px",
+      // height: "50px",
       borderRadius: "12px",
       objectFit: "cover",
       border: "3px solid #A85522",
-      padding: "2px",
+      // padding: "2px",
       backgroundColor: "white",
     },
     logoTextContainer: {
@@ -3151,7 +3151,7 @@ export default function Header() {
       gap: "6px",
       alignItems: "center",
       background: "rgba(255, 248, 240, 0.7)",
-      padding: "8px",
+      // padding: "8px",
       borderRadius: "20px",
       border: "1px solid rgba(168, 85, 34, 0.15)",
       boxShadow: "inset 0 2px 4px rgba(168, 85, 34, 0.05)",
@@ -3196,10 +3196,10 @@ export default function Header() {
       justifyContent: "center",
       textDecoration: "none",
       color: "#5A3E2B",
-      padding: "12px",
+      padding: "10px",
       borderRadius: "14px",
       transition: "all 0.3s ease",
-      backgroundColor: "rgba(168, 85, 34, 0.08)",
+      // backgroundColor: "rgba(168, 85, 34, 0.08)",
       border: "1px solid rgba(168, 85, 34, 0.1)",
     },
     cartCount: {
@@ -3210,13 +3210,13 @@ export default function Header() {
       color: "white",
       fontSize: "12px",
       fontWeight: "bold",
-      borderRadius: "50%",
+      borderRadius: "30%",
       minWidth: "24px",
       height: "24px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      padding: "0 4px",
+      padding: "0 3px",
       border: "2px solid #FFF8F0",
     },
     searchBtn: {
@@ -3238,7 +3238,7 @@ export default function Header() {
       background: "linear-gradient(135deg, #A85522 0%, #C56A33 100%)",
       border: "none",
       color: "white",
-      padding: "14px 28px",
+      padding: "10px 23px",
       borderRadius: "14px",
       cursor: "pointer",
       fontSize: "16px",
