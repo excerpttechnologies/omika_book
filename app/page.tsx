@@ -326,7 +326,7 @@ const Home = () => {
         </div>
      
       </section>
-         <Books/>
+    <Books/>
 
 
       {/* Add CSS Animation for Progress Bar */}
@@ -372,5 +372,6 @@ const Home = () => {
     </div>
   );
 };
+
 
 export default Home;

@@ -1,3 +1,5 @@
+
+
 .login-overlay {
   position: fixed;
   top: 0;
@@ -171,65 +173,7 @@
   text-decoration: underline;
 }
 
-/* Mobile Responsive */
-@media (max-width: 480px) {
-  .login-overlay {
-    padding: 16px;
-    align-items: flex-start;
-    padding-top: 40px;
-  }
-
-  .login-box {
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 100%;
-    margin-top: 0;
-  }
-
-  .login-box h2 {
-    font-size: 20px;
-    margin-bottom: 6px;
-  }
-
-  .login-subtitle {
-    font-size: 13px;
-    margin-bottom: 18px;
-  }
-
-  .form-group {
-    margin-bottom: 14px;
-  }
-
-  .form-input {
-    padding: 11px 12px;
-    font-size: 13px;
-  }
-
-  .submit-btn {
-    padding: 11px;
-    font-size: 13px;
-  }
-
-  .toggle-text {
-    font-size: 12px;
-    margin-top: 18px;
-  }
-}
-
-/* Small mobile devices */
-@media (max-width: 360px) {
-  .login-box {
-    padding: 18px;
-  }
-
-  .login-box h2 {
-    font-size: 18px;
-  }
-
-  .form-input {
-    padding: 10px 12px;
-  }
-  /* Add these to your existing login.css */
+/* Forgot Password Link */
 .forgot-password-link {
   text-align: center;
   margin-top: 10px;
@@ -246,6 +190,51 @@
   text-decoration: underline;
 }
 
+/* Password Group Styles */
+.password-group {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  width: 100%;
+  padding: 12px 40px 12px 14px !important; /* Right padding for icon */
+  border: 1.5px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.3s ease;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+}
+
+.password-toggle-btn:hover {
+  color: #333;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+  color: #007bff;
+}
+
+/* OTP and Success Message Styles */
 .otp-hint {
   display: block;
   color: #666;
@@ -283,4 +272,85 @@
 .form-group .secondary-btn + .submit-btn {
   margin-left: 10px;
 }
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .login-overlay {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+
+  .login-box {
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 100%;
+    margin-top: 0;
+  }
+
+  .login-box h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-input {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+
+  .password-input {
+    padding: 11px 40px 11px 12px !important;
+    font-size: 13px;
+  }
+  
+  .password-toggle-btn {
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    padding: 6px;
+  }
+
+  .submit-btn {
+    padding: 11px;
+    font-size: 13px;
+  }
+
+  .toggle-text {
+    font-size: 12px;
+    margin-top: 18px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 360px) {
+  .login-box {
+    padding: 18px;
+  }
+
+  .login-box h2 {
+    font-size: 18px;
+  }
+
+  .form-input {
+    padding: 10px 12px;
+  }
+
+  .password-input {
+    padding: 10px 38px 10px 12px !important;
+  }
+  
+  .password-toggle-btn {
+    right: 8px;
+    width: 20px;
+    height: 20px;
+  }
 }

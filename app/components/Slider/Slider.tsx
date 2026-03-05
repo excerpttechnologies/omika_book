@@ -42,8 +42,10 @@ export default function Slider({ slides }: SliderProps) {
               </div>
             </div>
           </SwiperSlide>
+          
         ))}
       </Swiper>
+      
     </div>
   );
 }

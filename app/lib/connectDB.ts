@@ -6,7 +6,7 @@ export const connectDB = async () => {
       return;
     }
 
-    await mongoose.connect("mongodb+srv://bookwebsite11_db_user:Book123@bookwebapp.s35itu7.mongodb.net/");
+    await mongoose.connect("mongodb+srv://bookwebsite11_db_user:Book123@bookwebapp.s35itu7.mongodb.net/om");
     console.log("MongoDB Connected");
   } catch (error) {
     console.log("DB connection error:", error);

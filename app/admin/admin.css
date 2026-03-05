@@ -59,6 +59,201 @@
 .sidebar-nav {
   padding: 20px 0;
 }
+/* Mobile Sidebar Styles - Update these sections */
+
+/* Main mobile sidebar - when open, show all content */
+.sidebar.mobile {
+  transform: translateX(-100%);
+  width: 280px !important; /* Force full width when open */
+  transition: transform 0.3s ease;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.sidebar.mobile.mobile-open {
+  transform: translateX(0);
+  width: 280px !important; /* Ensure full width when open */
+}
+
+/* Override any closed state styles for mobile when open */
+.sidebar.mobile.mobile-open .sidebar-header h2,
+.sidebar.mobile.mobile-open .nav-text {
+  display: block !important; /* Force show text when open */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Mobile header adjustments */
+.sidebar.mobile .sidebar-header {
+  height: 70px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar.mobile .sidebar-header h2 {
+  font-size: 1.2rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: visible; /* Allow text to be visible */
+}
+
+/* Mobile navigation items */
+.sidebar.mobile .nav-item {
+  padding: 15px 20px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  border: none;
+  background: none;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Ensure nav text is visible in mobile open state */
+.sidebar.mobile.mobile-open .nav-text {
+  display: inline-block !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Nav icon styling */
+.sidebar.mobile .nav-icon {
+  font-size: 1.2rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Mobile toggle button */
+.sidebar.mobile .sidebar-toggle {
+  font-size: 1.5rem;
+  padding: 5px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.sidebar.mobile .sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Logout button in mobile */
+.sidebar.mobile .logout-btn {
+  margin-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+}
+
+/* Ensure proper z-index and overlay */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+.mobile-overlay.active {
+  display: block;
+}
+
+/* Header mobile menu button */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: #333;
+}
+
+.mobile-menu-btn:hover {
+  background: #f0f0f0;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  /* Hide desktop sidebar */
+  .sidebar:not(.mobile) {
+    display: none;
+  }
+
+  /* Show mobile menu button */
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  /* Adjust main content for mobile */
+  .admin-main {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  /* Ensure sidebar is properly positioned */
+  .sidebar.mobile {
+    display: block;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Prevent body scroll when sidebar is open */
+  body.sidebar-open {
+    overflow: hidden;
+  }
+
+  /* Admin header adjustments */
+  .admin-header {
+    padding: 15px 20px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Show admin name in header if needed */
+  .header-admin-name {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .sidebar.mobile.mobile-open {
+    width: 100% !important; /* Full width on very small screens */
+  }
+
+  .sidebar.mobile .nav-item {
+    padding: 18px 20px; /* Larger touch targets */
+    font-size: 1.1rem;
+  }
+
+  .sidebar.mobile .sidebar-header {
+    padding: 15px 20px;
+  }
+
+  .sidebar.mobile .sidebar-toggle {
+    font-size: 1.8rem;
+  }
+}
 
 .nav-item {
   width: 100%;
