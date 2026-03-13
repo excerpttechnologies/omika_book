@@ -129,11 +129,549 @@
 
 
 
+// import { NextRequest, NextResponse } from "next/server";
+// import { connectDB } from "@/app/lib/connectDB";
+// import Book from "@/app/api/models/Book";
+// import { writeFile, mkdir } from "fs/promises";
+// import path from "path";
+
+// // ✅ GET all books
+// export async function GET() {
+//   try {
+//     await connectDB();
+//     const books = await Book.find({}).sort({ createdAt: -1 });
+//     return NextResponse.json(books);
+//   } catch (error) {
+//     console.error("GET /api/books error:", error);
+//     return NextResponse.json(
+//       { error: "Failed to fetch books" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// // ✅ POST - Create new book WITH IMAGES
+// export async function POST(request: NextRequest) {
+//   try {
+//     await connectDB();
+
+//     const formData = await request.formData();
+
+//     // Get form data - matching your frontend field names
+//     const bookName = formData.get("bookName") as string;
+//     const mrpPrice = Number(formData.get("mrpPrice"));
+//     const status = formData.get("status") as "draft" | "active";
+//     const pageNumber = Number(formData.get("pageNumber"));
+
+//     const frontImage = formData.get("image1") as File;
+//     const backImage = formData.get("image2") as File;
+
+//     // Validate required fields
+//     if (!bookName || !mrpPrice || !pageNumber) {
+//       return NextResponse.json(
+//         { error: "Book name, MRP price, and page number are required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     if (!frontImage || !backImage) {
+//       return NextResponse.json(
+//         { error: "Both front and back images are required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // 📂 Create upload directory if it doesn't exist
+//     const uploadDir = path.join(process.cwd(), "public/uploads/books");
+//     await mkdir(uploadDir, { recursive: true });
+
+//     // 🖼 Save images with unique names
+//     const timestamp = Date.now();
+//     const frontImageName = `${timestamp}-front-${frontImage.name.replace(/\s+/g, '-')}`;
+//     const backImageName = `${timestamp}-back-${backImage.name.replace(/\s+/g, '-')}`;
+
+//     const frontImagePath = path.join(uploadDir, frontImageName);
+//     const backImagePath = path.join(uploadDir, backImageName);
+
+//     // Save files
+//     await writeFile(frontImagePath, Buffer.from(await frontImage.arrayBuffer()));
+//     await writeFile(backImagePath, Buffer.from(await backImage.arrayBuffer()));
+
+//     // 💾 Save to MongoDB
+//     const newBook = await Book.create({
+//       bookName,
+//       mrpPrice,
+//       status: status || 'draft',
+//       pageNumber,
+//       frontImage: `/uploads/books/${frontImageName}`,
+//       backImage: `/uploads/books/${backImageName}`,
+//     });
+
+//     return NextResponse.json(
+//       { 
+//         success: true, 
+//         message: "Book created successfully",
+//         book: newBook 
+//       },
+//       { status: 201 }
+//     );
+
+//   } catch (error: any) {
+//     console.error("POST /api/books error:", error);
+    
+//     // Handle duplicate key errors
+//     if (error.code === 11000) {
+//       return NextResponse.json(
+//         { error: "A book with this name already exists" },
+//         { status: 400 }
+//       );
+//     }
+    
+//     // Handle validation errors
+//     if (error.name === 'ValidationError') {
+//       const errors = Object.values(error.errors).map((err: any) => err.message);
+//       return NextResponse.json(
+//         { error: errors.join(', ') },
+//         { status: 400 }
+//       );
+//     }
+
+//     return NextResponse.json(
+//       { error: "Failed to create book. Please try again." },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// // ✅ PUT - Update book
+// export async function PUT(request: NextRequest) {
+//   try {
+//     await connectDB();
+
+//     const { searchParams } = new URL(request.url);
+//     const id = searchParams.get("id");
+
+//     if (!id) {
+//       return NextResponse.json(
+//         { error: "Book ID is required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // Check if it's a form data request (with images) or JSON request
+//     const contentType = request.headers.get("content-type");
+    
+//     if (contentType?.includes("multipart/form-data")) {
+//       // Handle form data with images
+//       const formData = await request.formData();
+      
+//       const updateData: any = {};
+//       const fields = ["bookName", "mrpPrice", "status", "pageNumber"];
+      
+//       fields.forEach(field => {
+//         const value = formData.get(field);
+//         if (value) {
+//           if (field === "mrpPrice" || field === "pageNumber") {
+//             updateData[field] = Number(value);
+//           } else {
+//             updateData[field] = value;
+//           }
+//         }
+//       });
+
+//       // Handle image updates if provided
+//       const frontImage = formData.get("frontImage") as File;
+//       const backImage = formData.get("backImage") as File;
+
+//       if (frontImage) {
+//         const uploadDir = path.join(process.cwd(), "public/uploads/books");
+//         await mkdir(uploadDir, { recursive: true });
+        
+//         const frontImageName = `${Date.now()}-front-${frontImage.name.replace(/\s+/g, '-')}`;
+//         const frontImagePath = path.join(uploadDir, frontImageName);
+        
+//         await writeFile(frontImagePath, Buffer.from(await frontImage.arrayBuffer()));
+//         updateData.frontImage = `/uploads/books/${frontImageName}`;
+//       }
+
+//       if (backImage) {
+//         const uploadDir = path.join(process.cwd(), "public/uploads/books");
+//         await mkdir(uploadDir, { recursive: true });
+        
+//         const backImageName = `${Date.now()}-back-${backImage.name.replace(/\s+/g, '-')}`;
+//         const backImagePath = path.join(uploadDir, backImageName);
+        
+//         await writeFile(backImagePath, Buffer.from(await backImage.arrayBuffer()));
+//         updateData.backImage = `/uploads/books/${backImageName}`;
+//       }
+
+//       const updatedBook = await Book.findByIdAndUpdate(
+//         id,
+//         updateData,
+//         { new: true, runValidators: true }
+//       );
+
+//       if (!updatedBook) {
+//         return NextResponse.json(
+//           { error: "Book not found" },
+//           { status: 404 }
+//         );
+//       }
+
+//       return NextResponse.json({
+//         success: true,
+//         message: "Book updated successfully",
+//         book: updatedBook
+//       });
+
+//     } else {
+//       // Handle JSON request
+//       const updateData = await request.json();
+      
+//       const updatedBook = await Book.findByIdAndUpdate(
+//         id,
+//         updateData,
+//         { new: true, runValidators: true }
+//       );
+
+//       if (!updatedBook) {
+//         return NextResponse.json(
+//           { error: "Book not found" },
+//           { status: 404 }
+//         );
+//       }
+
+//       return NextResponse.json({
+//         success: true,
+//         message: "Book updated successfully",
+//         book: updatedBook
+//       });
+//     }
+
+//   } catch (error: any) {
+//     console.error("PUT /api/books error:", error);
+    
+//     if (error.name === 'ValidationError') {
+//       const errors = Object.values(error.errors).map((err: any) => err.message);
+//       return NextResponse.json(
+//         { error: errors.join(', ') },
+//         { status: 400 }
+//       );
+//     }
+
+//     return NextResponse.json(
+//       { error: "Failed to update book" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// // ✅ DELETE book
+// export async function DELETE(request: NextRequest) {
+//   try {
+//     await connectDB();
+    
+//     const { searchParams } = new URL(request.url);
+//     const id = searchParams.get("id");
+
+//     if (!id) {
+//       return NextResponse.json(
+//         { error: "Book ID is required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     const deletedBook = await Book.findByIdAndDelete(id);
+
+//     if (!deletedBook) {
+//       return NextResponse.json(
+//         { error: "Book not found" },
+//         { status: 404 }
+//       );
+//     }
+
+//     // Optional: Delete the image files from server
+//     // You might want to add this if you want to clean up files
+
+//     return NextResponse.json({
+//       success: true,
+//       message: "Book deleted successfully"
+//     });
+
+//   } catch (error) {
+//     console.error("DELETE /api/books error:", error);
+//     return NextResponse.json(
+//       { error: "Failed to delete book" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { NextRequest, NextResponse } from "next/server";
+// import { connectDB } from "@/app/lib/connectDB";
+// import Book from "@/app/api/models/Book";
+// import { writeFile, mkdir } from "fs/promises";
+// import path from "path";
+
+// // ✅ GET all books
+// export async function GET() {
+//   try {
+//     await connectDB();
+//     const books = await Book.find({}).sort({ createdAt: -1 });
+//     return NextResponse.json(books);
+//   } catch (error) {
+//     console.error("GET /api/books error:", error);
+//     return NextResponse.json(
+//       { error: "Failed to fetch books" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// // ✅ POST - Create new book WITH IMAGES
+// export async function POST(request: NextRequest) {
+//   try {
+//     await connectDB();
+
+//     const formData = await request.formData();
+
+//     const bookName = formData.get("bookName") as string;
+//     const mrpPrice = Number(formData.get("mrpPrice"));
+//     const status = formData.get("status") as "draft" | "active";
+//     const pageNumber = Number(formData.get("pageNumber"));
+
+//     const frontImage = formData.get("image1") as File;
+//     const backImage = formData.get("image2") as File;
+
+//     if (!bookName || !mrpPrice || !pageNumber) {
+//       return NextResponse.json(
+//         { error: "Book name, MRP price, and page number are required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     if (!frontImage || !backImage) {
+//       return NextResponse.json(
+//         { error: "Both front and back images are required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // 📂 Create upload directory
+//     const uploadDir = path.join(process.cwd(), "public/uploads/books");
+//     await mkdir(uploadDir, { recursive: true });
+
+//     // 🖼 Save images
+//     const timestamp = Date.now();
+//     const frontImageName = `${timestamp}-front-${frontImage.name.replace(/\s+/g, "-")}`;
+//     const backImageName = `${timestamp}-back-${backImage.name.replace(/\s+/g, "-")}`;
+
+//     await writeFile(
+//       path.join(uploadDir, frontImageName),
+//       Buffer.from(await frontImage.arrayBuffer())
+//     );
+//     await writeFile(
+//       path.join(uploadDir, backImageName),
+//       Buffer.from(await backImage.arrayBuffer())
+//     );
+
+//     // 💾 Save to MongoDB
+//     const newBook = await Book.create({
+//       bookName,
+//       mrpPrice,
+//       status: status || "draft",
+//       pageNumber,
+//       frontImage: `/uploads/books/${frontImageName}`,
+//       backImage: `/uploads/books/${backImageName}`,
+//     });
+
+//     return NextResponse.json(
+//       { success: true, message: "Book created successfully", book: newBook },
+//       { status: 201 }
+//     );
+//   } catch (error: any) {
+//     console.error("POST /api/books error:", error);
+
+//     if (error.code === 11000) {
+//       return NextResponse.json(
+//         { error: "A book with this name already exists" },
+//         { status: 400 }
+//       );
+//     }
+
+//     if (error.name === "ValidationError") {
+//       const errors = Object.values(error.errors).map((err: any) => err.message);
+//       return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
+//     }
+
+//     return NextResponse.json(
+//       { error: "Failed to create book. Please try again." },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// // ✅ PUT - Update book
+// export async function PUT(request: NextRequest) {
+//   try {
+//     await connectDB();
+
+//     const { searchParams } = new URL(request.url);
+//     const id = searchParams.get("id");
+
+//     if (!id) {
+//       return NextResponse.json({ error: "Book ID is required" }, { status: 400 });
+//     }
+
+//     const contentType = request.headers.get("content-type");
+
+//     if (contentType?.includes("multipart/form-data")) {
+//       const formData = await request.formData();
+//       const updateData: any = {};
+
+//       const fields = ["bookName", "mrpPrice", "status", "pageNumber"];
+//       fields.forEach((field) => {
+//         const value = formData.get(field);
+//         if (value) {
+//           if (field === "mrpPrice" || field === "pageNumber") {
+//             updateData[field] = Number(value);
+//           } else {
+//             updateData[field] = value;
+//           }
+//         }
+//       });
+
+//       const uploadDir = path.join(process.cwd(), "public/uploads/books");
+//       await mkdir(uploadDir, { recursive: true });
+
+//       const frontImage = formData.get("frontImage") as File;
+//       const backImage = formData.get("backImage") as File;
+
+//       if (frontImage && frontImage.size > 0) {
+//         const frontImageName = `${Date.now()}-front-${frontImage.name.replace(/\s+/g, "-")}`;
+//         await writeFile(
+//           path.join(uploadDir, frontImageName),
+//           Buffer.from(await frontImage.arrayBuffer())
+//         );
+//         updateData.frontImage = `/uploads/books/${frontImageName}`;
+//       }
+
+//       if (backImage && backImage.size > 0) {
+//         const backImageName = `${Date.now()}-back-${backImage.name.replace(/\s+/g, "-")}`;
+//         await writeFile(
+//           path.join(uploadDir, backImageName),
+//           Buffer.from(await backImage.arrayBuffer())
+//         );
+//         updateData.backImage = `/uploads/books/${backImageName}`;
+//       }
+
+//       const updatedBook = await Book.findByIdAndUpdate(id, updateData, {
+//         new: true,
+//         runValidators: true,
+//       });
+
+//       if (!updatedBook) {
+//         return NextResponse.json({ error: "Book not found" }, { status: 404 });
+//       }
+
+//       return NextResponse.json({
+//         success: true,
+//         message: "Book updated successfully",
+//         book: updatedBook,
+//       });
+//     } else {
+//       const updateData = await request.json();
+
+//       const updatedBook = await Book.findByIdAndUpdate(id, updateData, {
+//         new: true,
+//         runValidators: true,
+//       });
+
+//       if (!updatedBook) {
+//         return NextResponse.json({ error: "Book not found" }, { status: 404 });
+//       }
+
+//       return NextResponse.json({
+//         success: true,
+//         message: "Book updated successfully",
+//         book: updatedBook,
+//       });
+//     }
+//   } catch (error: any) {
+//     console.error("PUT /api/books error:", error);
+
+//     if (error.name === "ValidationError") {
+//       const errors = Object.values(error.errors).map((err: any) => err.message);
+//       return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
+//     }
+
+//     return NextResponse.json({ error: "Failed to update book" }, { status: 500 });
+//   }
+// }
+
+// // ✅ DELETE book
+// export async function DELETE(request: NextRequest) {
+//   try {
+//     await connectDB();
+
+//     const { searchParams } = new URL(request.url);
+//     const id = searchParams.get("id");
+
+//     if (!id) {
+//       return NextResponse.json({ error: "Book ID is required" }, { status: 400 });
+//     }
+
+//     const deletedBook = await Book.findByIdAndDelete(id);
+
+//     if (!deletedBook) {
+//       return NextResponse.json({ error: "Book not found" }, { status: 404 });
+//     }
+
+//     return NextResponse.json({
+//       success: true,
+//       message: "Book deleted successfully",
+//     });
+//   } catch (error) {
+//     console.error("DELETE /api/books error:", error);
+//     return NextResponse.json({ error: "Failed to delete book" }, { status: 500 });
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/connectDB";
 import Book from "@/app/api/models/Book";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+
+// ✅ Single helper - saves OUTSIDE public/, persists on VPS
+const getUploadDir = async () => {
+  const uploadDir = path.join(process.cwd(), "uploads", "books");
+  await mkdir(uploadDir, { recursive: true }); // auto-creates if missing
+  return uploadDir;
+};
 
 // ✅ GET all books
 export async function GET() {
@@ -156,17 +694,13 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     const formData = await request.formData();
-
-    // Get form data - matching your frontend field names
     const bookName = formData.get("bookName") as string;
     const mrpPrice = Number(formData.get("mrpPrice"));
     const status = formData.get("status") as "draft" | "active";
     const pageNumber = Number(formData.get("pageNumber"));
-
     const frontImage = formData.get("image1") as File;
     const backImage = formData.get("image2") as File;
 
-    // Validate required fields
     if (!bookName || !mrpPrice || !pageNumber) {
       return NextResponse.json(
         { error: "Book name, MRP price, and page number are required" },
@@ -181,61 +715,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 📂 Create upload directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), "public/uploads/books");
-    await mkdir(uploadDir, { recursive: true });
+    // ✅ Auto-creates uploads/books/ folder on VPS if not exists
+    const uploadDir = await getUploadDir();
 
-    // 🖼 Save images with unique names
     const timestamp = Date.now();
-    const frontImageName = `${timestamp}-front-${frontImage.name.replace(/\s+/g, '-')}`;
-    const backImageName = `${timestamp}-back-${backImage.name.replace(/\s+/g, '-')}`;
+    const frontImageName = `${timestamp}-front-${frontImage.name.replace(/\s+/g, "-")}`;
+    const backImageName = `${timestamp}-back-${backImage.name.replace(/\s+/g, "-")}`;
 
-    const frontImagePath = path.join(uploadDir, frontImageName);
-    const backImagePath = path.join(uploadDir, backImageName);
+    await writeFile(
+      path.join(uploadDir, frontImageName),
+      Buffer.from(await frontImage.arrayBuffer())
+    );
+    await writeFile(
+      path.join(uploadDir, backImageName),
+      Buffer.from(await backImage.arrayBuffer())
+    );
 
-    // Save files
-    await writeFile(frontImagePath, Buffer.from(await frontImage.arrayBuffer()));
-    await writeFile(backImagePath, Buffer.from(await backImage.arrayBuffer()));
-
-    // 💾 Save to MongoDB
+    // ✅ Now points to API route, not public folder
     const newBook = await Book.create({
       bookName,
       mrpPrice,
-      status: status || 'draft',
+      status: status || "draft",
       pageNumber,
-      frontImage: `/uploads/books/${frontImageName}`,
-      backImage: `/uploads/books/${backImageName}`,
+      frontImage: `/api/uploads/books/${frontImageName}`,
+      backImage: `/api/uploads/books/${backImageName}`,
     });
 
     return NextResponse.json(
-      { 
-        success: true, 
-        message: "Book created successfully",
-        book: newBook 
-      },
+      { success: true, message: "Book created successfully", book: newBook },
       { status: 201 }
     );
-
   } catch (error: any) {
     console.error("POST /api/books error:", error);
-    
-    // Handle duplicate key errors
     if (error.code === 11000) {
       return NextResponse.json(
         { error: "A book with this name already exists" },
         { status: 400 }
       );
     }
-    
-    // Handle validation errors
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       const errors = Object.values(error.errors).map((err: any) => err.message);
-      return NextResponse.json(
-        { error: errors.join(', ') },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
     }
-
     return NextResponse.json(
       { error: "Failed to create book. Please try again." },
       { status: 500 }
@@ -252,117 +773,88 @@ export async function PUT(request: NextRequest) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "Book ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Book ID is required" }, { status: 400 });
     }
 
-    // Check if it's a form data request (with images) or JSON request
     const contentType = request.headers.get("content-type");
-    
+
     if (contentType?.includes("multipart/form-data")) {
-      // Handle form data with images
       const formData = await request.formData();
-      
       const updateData: any = {};
+
       const fields = ["bookName", "mrpPrice", "status", "pageNumber"];
-      
-      fields.forEach(field => {
+      fields.forEach((field) => {
         const value = formData.get(field);
         if (value) {
-          if (field === "mrpPrice" || field === "pageNumber") {
-            updateData[field] = Number(value);
-          } else {
-            updateData[field] = value;
-          }
+          updateData[field] =
+            field === "mrpPrice" || field === "pageNumber"
+              ? Number(value)
+              : value;
         }
       });
 
-      // Handle image updates if provided
+      // ✅ Auto-creates folder if missing
+      const uploadDir = await getUploadDir();
+
       const frontImage = formData.get("frontImage") as File;
       const backImage = formData.get("backImage") as File;
 
-      if (frontImage) {
-        const uploadDir = path.join(process.cwd(), "public/uploads/books");
-        await mkdir(uploadDir, { recursive: true });
-        
-        const frontImageName = `${Date.now()}-front-${frontImage.name.replace(/\s+/g, '-')}`;
-        const frontImagePath = path.join(uploadDir, frontImageName);
-        
-        await writeFile(frontImagePath, Buffer.from(await frontImage.arrayBuffer()));
-        updateData.frontImage = `/uploads/books/${frontImageName}`;
-      }
-
-      if (backImage) {
-        const uploadDir = path.join(process.cwd(), "public/uploads/books");
-        await mkdir(uploadDir, { recursive: true });
-        
-        const backImageName = `${Date.now()}-back-${backImage.name.replace(/\s+/g, '-')}`;
-        const backImagePath = path.join(uploadDir, backImageName);
-        
-        await writeFile(backImagePath, Buffer.from(await backImage.arrayBuffer()));
-        updateData.backImage = `/uploads/books/${backImageName}`;
-      }
-
-      const updatedBook = await Book.findByIdAndUpdate(
-        id,
-        updateData,
-        { new: true, runValidators: true }
-      );
-
-      if (!updatedBook) {
-        return NextResponse.json(
-          { error: "Book not found" },
-          { status: 404 }
+      if (frontImage && frontImage.size > 0) {
+        const frontImageName = `${Date.now()}-front-${frontImage.name.replace(/\s+/g, "-")}`;
+        await writeFile(
+          path.join(uploadDir, frontImageName),
+          Buffer.from(await frontImage.arrayBuffer())
         );
+        updateData.frontImage = `/api/uploads/books/${frontImageName}`;
       }
 
-      return NextResponse.json({
-        success: true,
-        message: "Book updated successfully",
-        book: updatedBook
+      if (backImage && backImage.size > 0) {
+        const backImageName = `${Date.now()}-back-${backImage.name.replace(/\s+/g, "-")}`;
+        await writeFile(
+          path.join(uploadDir, backImageName),
+          Buffer.from(await backImage.arrayBuffer())
+        );
+        updateData.backImage = `/api/uploads/books/${backImageName}`;
+      }
+
+      const updatedBook = await Book.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
       });
 
-    } else {
-      // Handle JSON request
-      const updateData = await request.json();
-      
-      const updatedBook = await Book.findByIdAndUpdate(
-        id,
-        updateData,
-        { new: true, runValidators: true }
-      );
-
       if (!updatedBook) {
-        return NextResponse.json(
-          { error: "Book not found" },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "Book not found" }, { status: 404 });
       }
 
       return NextResponse.json({
         success: true,
         message: "Book updated successfully",
-        book: updatedBook
+        book: updatedBook,
+      });
+    } else {
+      const updateData = await request.json();
+      const updatedBook = await Book.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!updatedBook) {
+        return NextResponse.json({ error: "Book not found" }, { status: 404 });
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Book updated successfully",
+        book: updatedBook,
       });
     }
-
   } catch (error: any) {
     console.error("PUT /api/books error:", error);
-    
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       const errors = Object.values(error.errors).map((err: any) => err.message);
-      return NextResponse.json(
-        { error: errors.join(', ') },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
     }
-
-    return NextResponse.json(
-      { error: "Failed to update book" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update book" }, { status: 500 });
   }
 }
 
@@ -370,39 +862,25 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     await connectDB();
-    
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "Book ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Book ID is required" }, { status: 400 });
     }
 
     const deletedBook = await Book.findByIdAndDelete(id);
 
     if (!deletedBook) {
-      return NextResponse.json(
-        { error: "Book not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
-
-    // Optional: Delete the image files from server
-    // You might want to add this if you want to clean up files
 
     return NextResponse.json({
       success: true,
-      message: "Book deleted successfully"
+      message: "Book deleted successfully",
     });
-
   } catch (error) {
     console.error("DELETE /api/books error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete book" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete book" }, { status: 500 });
   }
 }
